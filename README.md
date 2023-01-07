@@ -6,3 +6,4 @@ This Python program uses web scraping techniques to download PDF and ebooks from
 - Python 3.6 or higher
 - requests
 - beautifulsoup4
+- selenium
