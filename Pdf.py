@@ -5,12 +5,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import lxml
 import time
 import re
-PATH = "C:\Program Files (x86)\chromedrver.exe"
 
 
+os.environ['webdriver.chrome.driver'] = "C:\Program Files (x86)\chromedrver.exe"
 
 
 # Get the file name from the user
@@ -64,7 +65,7 @@ links = soup.find_all("a", {"class": "ai-search"})
 link = []
 for i in links:
     link.append(i['href'])
-
+  
 # Get the index of the book that the user wants to download
 INDEX_NO = int(input("Select BOOK wanted :"))
 INDEX_NO =(INDEX_NO-1)
@@ -91,12 +92,17 @@ for i in dwnld_link_2:
 # Construct the full download link
 dwnld_link_2 = web_link+dwnld_link_2
 
-# Set up the Chrome driver options
-options = webdriver.ChromeOptions()
-options.add_argument('--ignore-certificate-errors')
+capabilities = DesiredCapabilities().CHROME
+capabilities['acceptInsecureCerts'] = True
 
-# Create a Chrome driver instance
-driver = webdriver.Chrome(chrome_options=options)
+driver = webdriver.Chrome(desired_capabilities=capabilities)
+
+# # Set up the Chrome driver options
+# options = webdriver.ChromeOptions()
+# options.add_argument('--ignore-certificate-errors')
+
+# # Create a Chrome driver instance
+# driver = webdriver.Chrome(chrome_options=options)
 
 # Navigate to the download page
 driver.get(dwnld_link_2)
@@ -117,7 +123,7 @@ soup2 = BeautifulSoup(html, 'lxml')
 divs = soup2.find_all("div", {"class": "text-center"})
 
 # Check if the book is available for download
-href = None
+href = ""
 if divs == None:
     print("\n BOOK NOT AVAILABLE !")
     exit()
@@ -143,15 +149,17 @@ else:
     response = requests.get(final_link)
 
 # Check if the  file is available
-    if response.status_code == 200:
+    if href !="":
+        if response.content:
 
     # Save the file
-        with open(file_path, "wb") as f:
+            with open(file_path, "wb") as f:
         # Write the data to the file
-            f.write(response.content)
+                f.write(response.content)
    
 
-        print("SUCCESSFULLY DOWNLOADED")
+            print("SUCCESSFULLY DOWNLOADED")
+        else:
+            print("BOOK NOT AVAILABLE")
     else:
-        print("BOOK NOT AVAILABLE")
-
+            print("BOOK NOT AVAILABLE")
