@@ -92,17 +92,12 @@ for i in dwnld_link_2:
 # Construct the full download link
 dwnld_link_2 = web_link+dwnld_link_2
 
-capabilities = DesiredCapabilities().CHROME
-capabilities['acceptInsecureCerts'] = True
+# Set up the Chrome driver options
+options = webdriver.ChromeOptions()
+options.add_argument('--ignore-certificate-errors')
 
-driver = webdriver.Chrome(desired_capabilities=capabilities)
-
-# # Set up the Chrome driver options
-# options = webdriver.ChromeOptions()
-# options.add_argument('--ignore-certificate-errors')
-
-# # Create a Chrome driver instance
-# driver = webdriver.Chrome(chrome_options=options)
+# Create a Chrome driver instance
+driver = webdriver.Chrome(chrome_options=options)
 
 # Navigate to the download page
 driver.get(dwnld_link_2)
